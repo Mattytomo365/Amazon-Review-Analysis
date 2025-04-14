@@ -15,6 +15,7 @@ def load_data(file_path):
 def main():
 
     df = load_data("Reviews.csv")
-    print(df.head())
+    print(df)
+    print(df.isnull().sum())
 
 main()
