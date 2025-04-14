@@ -6,4 +6,4 @@ This project sees me analyse a dataset consisting of Amazon product reviews. I w
 
 Due to the size of the dataset, I can not commit it to this repository, however, you can download it from **Kaggle** [here](https://www.kaggle.com/datasets/arhamrumi/amazon-product-reviews)
 
-I will be keeping this repository updated as I go along!
+I am developing this project using Python and VS Code, I will be keeping this repository updated as I go along!
