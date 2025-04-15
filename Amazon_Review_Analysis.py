@@ -30,8 +30,23 @@ def textblob_scoring(df):
     """
     Perform sentiment analysis using TextBlob.
     """
-    blob = textblob.TextBlob(text)
-    return blob.sentiment.polarity
+
+    scores = []
+
+    for row in df.iterrows():
+
+        total_score = 0
+        count = 0
+        blob = textblob.TextBlob(row['review_text'])
+
+        for sentence in blob.sentences:
+            total_score += sentence.sentiment.polarity
+            count += 1
+
+        scores.append(total_score/count)
+
+    df['textblob_score'] = scores
+    return df
 
 def main():
     """
@@ -39,6 +54,7 @@ def main():
     """
     df = load_data("Reviews.csv")
     df = preprocess_data(df)
+    textblob_scoring(df)
     print(df)
 
 main()
