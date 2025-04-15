@@ -16,9 +16,10 @@ def preprocess_data(df):
     """
     Dropping unnecessary columns and renaming the columns.
     """
-    del df['ProfileName'] # ProfileName is not useful for analysis
+    del df['ProfileName'] # ProfileName is not useful for analysis and it contains a lot of null values
     del df['UserId'] # UserId is not useful for analysis
-    del df['Summary'] # Summary provides a shortened version of the review, meaning keywords for the seniment analysis are not present
+    del df['Summary'] # Summary provides a shortened version of the review, meaning keywords for the seniment analysis are not present,
+    # it also contains a lot of null values
     del df['Time'] # Time is not useful for analysis
 
     # Renaming columns for better readability
@@ -33,11 +34,12 @@ def textblob_scoring(df):
 
     scores = []
 
-    for row in df.iterrows():
+    for row in df.review_text:
 
         total_score = 0
         count = 0
-        blob = textblob.TextBlob(row['review_text'])
+        #blob = textblob.TextBlob(row['review_text'])
+        blob = textblob.TextBlob(row)
 
         for sentence in blob.sentences:
             total_score += sentence.sentiment.polarity
