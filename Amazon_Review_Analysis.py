@@ -21,6 +21,9 @@ def preprocess_data(df):
     del df['Summary'] # Summary provides a shortened version of the review, meaning keywords for the seniment analysis are not present
     del df['Time'] # Time is not useful for analysis
 
+    # Renaming columns for better readability
+    df.rename(columns={'Id':'review_id', 'HelpfulnessNumerator':'helpfulness_numerator', 'Score':'product_rating', 'Text':'review_text'}, inplace=True)
+
     return df
 
 def main():
