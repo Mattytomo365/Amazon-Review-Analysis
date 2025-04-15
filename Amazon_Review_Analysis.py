@@ -27,14 +27,14 @@ def preprocess_data(df):
 
     return df
 
-def textblob_scoring(df):
+def textblob_scoring(df_sample):
     """
     Perform sentiment analysis using TextBlob.
     """
 
     scores = []
 
-    for row in df.review_text:
+    for row in df_sample.review_text:
 
         total_score = 0
         count = 0
@@ -47,8 +47,8 @@ def textblob_scoring(df):
 
         scores.append(total_score/count)
 
-    df['textblob_score'] = scores
-    return df
+    df_sample['textblob_score'] = scores
+    return df_sample
 
 def main():
     """
