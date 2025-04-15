@@ -26,6 +26,13 @@ def preprocess_data(df):
 
     return df
 
+def textblob_scoring(df):
+    """
+    Perform sentiment analysis using TextBlob.
+    """
+    blob = textblob.TextBlob(text)
+    return blob.sentiment.polarity
+
 def main():
     """
     Main function to execute the script.
