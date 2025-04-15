@@ -27,10 +27,11 @@ def preprocess_data(df):
     return df
 
 def main():
-
+    """
+    Main function to execute the script.
+    """
     df = load_data("Reviews.csv")
     df = preprocess_data(df)
     print(df)
-    print(df.isnull().sum())
 
 main()
