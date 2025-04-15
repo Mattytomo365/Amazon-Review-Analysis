@@ -56,7 +56,13 @@ def main():
     """
     df = load_data("Reviews.csv")
     df = preprocess_data(df)
-    textblob_scoring(df)
+    print('Processing complete.')
+    print(df.head())
+
+    df_sample = df.sample(10000, random_state=42)
+
+    textblob_scoring(df_sample)
+    print(df_sample)
     print(df)
 
 main()
