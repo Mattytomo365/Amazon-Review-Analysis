@@ -68,6 +68,8 @@ def main():
 
     # Sample 10,000 rows for analysis
     df_sample = df.sample(10000, random_state=42)
+    # Storing the sampled data to a CSV file
+    df_sample.to_csv("sampled_reviews.csv", index=False)
 
     textblob_scoring(df_sample)
     df_sample = sentiment_classification(df_sample)
