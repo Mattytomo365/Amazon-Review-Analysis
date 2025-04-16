@@ -97,5 +97,7 @@ def main():
     df_sample = sentiment_classification(df_sample)
     print(df_sample)
 
+    collocation_extraction_co_occurrence(df_sample)
+
 
 main()
