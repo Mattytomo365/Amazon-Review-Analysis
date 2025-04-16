@@ -57,6 +57,28 @@ def sentiment_classification(df_sample):
     df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
     return df_sample
 
+def collocation_extraction_co_occurrence(df_sample):
+    """
+    Extract collocations and co-occurrences from the reviews.
+    """
+    nltk.download('punkt')
+    nltk.download('stopwords')
+
+    # Tokenize the reviews
+    df_sample['tokens'] = df_sample['review_text'].apply(lambda x: nltk.word_tokenize(x.lower()))
+    df_sample['tokens'] = df_sample['tokens'].apply(lambda x: [word for word in x if word.isalpha()])
+
+    # Create a list of all tokens
+    all_tokens = [token for sublist in df_sample['tokens'] for token in sublist]
+
+    # Create a frequency distribution of the tokens
+    freq_dist = nltk.FreqDist(all_tokens)
+
+    # Plot the frequency distribution
+    plt.figure(figsize=(12, 6))
+    freq_dist.plot(30, cumulative=False)
+    plt.show()
+
 def main():
     """
     Main function to execute the script.
