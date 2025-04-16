@@ -57,6 +57,19 @@ def sentiment_classification(df_sample):
     df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
     return df_sample
 
+def collocation_extraction(df_sample):
+    """
+    Extract collocations from the review text.
+    """
+    # Tokenize the review text
+    tokens = nltk.word_tokenize(' '.join(df_sample['review_text']))
+    # Extract collocations using NLTK's BigramCollocationFinder
+    bigram_measures = nltk.collocations.BigramAssocMeasures()
+    finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+    finder.apply_freq_filter(3)  # Filter out bigrams that occur less than 3 times
+    collocations = finder.nbest(bigram_measures.pmi, 10)  # Get top 10 collocations based on Pointwise Mutual Information (PMI)
+    return collocations
+
 def main():
     """
     Main function to execute the script.
