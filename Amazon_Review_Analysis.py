@@ -50,6 +50,13 @@ def textblob_scoring(df_sample):
     df_sample['textblob_score'] = scores
     return df_sample
 
+def sentiment_classification(df_sample):
+    """
+    Classify the sentiment based on the TextBlob score.
+    """
+    df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
+    return df_sample
+
 def main():
     """
     Main function to execute the script.
@@ -59,10 +66,12 @@ def main():
     print('Processing complete.')
     print(df.head())
 
+    # Sample 10,000 rows for analysis
     df_sample = df.sample(10000, random_state=42)
 
     textblob_scoring(df_sample)
+    df_sample = sentiment_classification(df_sample)
     print(df_sample)
-    print(df)
+
 
 main()
