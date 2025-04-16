@@ -57,7 +57,7 @@ def sentiment_classification(df_sample):
     df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
     return df_sample
 
-def collocation_extraction(df_sample):
+def collocation_extraction_pmi(df_sample):
     """
     Extract collocations from the review text.
     """
