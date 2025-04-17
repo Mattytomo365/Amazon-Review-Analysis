@@ -88,7 +88,7 @@ def main():
     df_sample = sentiment_classification(df_sample)
     print(df_sample)
 
-    collocation_extraction_pmi(df_sample)
+    collocation_extraction_pmi(df_sample) # take this out before merging
 
 
 main()
