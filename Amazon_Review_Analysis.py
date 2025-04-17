@@ -13,6 +13,7 @@ def load_data(file_path):
     df = pd.read_csv(file_path)
     return df
 
+
 def preprocess_data(df):
     """
     Dropping unnecessary columns and renaming the columns.
@@ -27,6 +28,7 @@ def preprocess_data(df):
     df.rename(columns={'Id':'review_id', 'ProductId':'product_id', 'HelpfulnessNumerator':'helpfulness_numerator', 'Score':'product_rating', 'Text':'review_text'}, inplace=True)
 
     return df
+
 
 def textblob_scoring(df_sample):
     """
@@ -51,12 +53,14 @@ def textblob_scoring(df_sample):
     df_sample['textblob_score'] = scores
     return df_sample
 
+
 def sentiment_classification(df_sample):
     """
     Classify the sentiment based on the TextBlob score.
     """
     df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
     return df_sample
+
 
 def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True):
     """
@@ -77,8 +81,11 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
         bigram = Counter()
         unigram = Counter()
 
+        tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
+
         if pos_filtered:
             # Filter tokens based on POS tagging
+
             tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
 
             # Create a list of all tokens
@@ -91,8 +98,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
 
         else:
             # Tokenize the reviews
-            tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
-            tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
+            tokens = tokens.apply(lambda x: [word for word in x if word.isalpha()])
 
             all_tokens = [token for sublist in tokens for token in sublist]
             for i in range(len(all_tokens)):
@@ -118,8 +124,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
         else:  
             reviews = df_sample['review_text']
             # Tokenize the reviews
-            tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
-            tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
+            tokens = tokens.apply(lambda x: [word for word in x if word.isalpha()])
 
             # Create a list of all tokens
             all_tokens = [token for sublist in tokens for token in sublist]
@@ -165,7 +170,7 @@ def main():
     df_sample = sentiment_classification(df_sample)
     #print(df_sample)
 
-    collocation_extraction_co_occurrence(df_sample) # take this out before merging
+    collocation_extraction_co_occurrence(df_sample, 'positive') # take this out before merging
 
 
 main()
