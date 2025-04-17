@@ -58,12 +58,17 @@ def sentiment_classification(df_sample):
     df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
     return df_sample
 
-def collocation_extraction_co_occurrence(df_sample, sentiment, sentiment_filtered=True, pos_filtered=True):
+def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True):
     """
     Extract collocations and co-occurrences from the reviews.
     """
     nltk.download('punkt')
     nltk.download('stopwords')
+
+    if sentiment == ' ':
+        sentiment_filtered = False
+    else:
+        sentiment_filtered = True
 
     if sentiment_filtered:
         # Filtering reviews based on sentiment classification
@@ -82,6 +87,8 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, sentiment_filtere
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
+            print('Top 10 collocations (co-occurrences)(sentiment filtered)(pos tag filtered):')
+
         else:
             # Tokenize the reviews
             tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
@@ -92,25 +99,53 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, sentiment_filtere
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
+            print('Top 10 collocations (co-occurrences)(sentiment filtered)(pos tag unfiltered):')
 
     else:
-        reviews = df_sample['review_text']
-        # Tokenize the reviews
-        tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
-        tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
 
-        # Create a list of all tokens
-        all_tokens = [token for sublist in tokens for token in sublist]
+        if pos_filtered:
+            # Filter tokens based on POS tagging
+            tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
 
-        for i in range(len(all_tokens)):
-            bigram[(all_tokens[i], all_tokens[i + 1])] += 1
-            unigram[(all_tokens[i])] += 1
+            # Create a list of all tokens
+            all_tokens = [token for sublist in tokens for token in sublist]
+            for i in range(len(all_tokens)):
+                bigram[(all_tokens[i], all_tokens[i + 1])] += 1
+                unigram[(all_tokens[i])] += 1
 
-        # Create a frequency distribution of the tokens
-        freq_dist = nltk.FreqDist(all_tokens)
-        plt.figure(figsize=(12, 6))
-        freq_dist.plot(30, cumulative=False)
-        plt.show()
+            print('Top 10 collocations (co-occurrences)(sentiment unfiltered)(pos tag filtered):')
+        
+        else:  
+            reviews = df_sample['review_text']
+            # Tokenize the reviews
+            tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
+            tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
+
+            # Create a list of all tokens
+            all_tokens = [token for sublist in tokens for token in sublist]
+
+            for i in range(len(all_tokens)):
+                bigram[(all_tokens[i], all_tokens[i + 1])] += 1
+                unigram[(all_tokens[i])] += 1
+
+        print('Top 10 collocations (co-occurrences)(sentiment unfiltered)(pos tag unfiltered):')
+
+        # # Create a frequency distribution of the tokens
+        # freq_dist = nltk.FreqDist(all_tokens)
+        # plt.figure(figsize=(12, 6))
+        # freq_dist.plot(30, cumulative=False)
+        # plt.show()
+
+    collocation_data = []
+
+    for (word1, word2), bigram_count in bigram.items():
+        unigram_count_word1 = unigram[word1]
+        unigram_count_word2 = unigram[word2]
+        collocation_data.append((word1, word2, bigram_count, unigram_count_word1, unigram_count_word2))
+
+    collocations_df = pd.DataFrame(collocation_data, columns=['Word1', 'Word2', 'Co-occurrence', 'Word1_Count', 'Word2_Count'])
+    collocations_df = collocations_df.sort_values(by='Co-occurrence', ascending=False).head(10)
+    print(collocations_df)
 
 def main():
     """
@@ -128,7 +163,7 @@ def main():
 
     textblob_scoring(df_sample)
     df_sample = sentiment_classification(df_sample)
-    print(df_sample)
+    #print(df_sample)
 
     collocation_extraction_co_occurrence(df_sample) # take this out before merging
 
