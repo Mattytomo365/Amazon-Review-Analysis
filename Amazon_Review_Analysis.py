@@ -3,6 +3,7 @@ import textblob
 import nltk
 import matplotlib.pyplot as plt
 import seaborn as sns
+from collections import Counter
 
 def load_data(file_path):
     """
@@ -67,9 +68,30 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, sentiment_filtere
     if sentiment_filtered:
         # Filtering reviews based on sentiment classification
         reviews = df_sample[df_sample['sentiment'] == sentiment]['review_text']
-        # Tokenize the reviews
-        tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
-        tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
+
+        bigram = Counter()
+        unigram = Counter()
+
+        if pos_filtered:
+            # Filter tokens based on POS tagging
+            tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
+
+            # Create a list of all tokens
+            all_tokens = [token for sublist in tokens for token in sublist]
+            for i in range(len(all_tokens)):
+                bigram[(all_tokens[i], all_tokens[i + 1])] += 1
+                unigram[(all_tokens[i])] += 1
+
+        else:
+            # Tokenize the reviews
+            tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
+            tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
+
+            all_tokens = [token for sublist in tokens for token in sublist]
+            for i in range(len(all_tokens)):
+                bigram[(all_tokens[i], all_tokens[i + 1])] += 1
+                unigram[(all_tokens[i])] += 1
+
 
     else:
         reviews = df_sample['review_text']
@@ -79,6 +101,10 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, sentiment_filtere
 
         # Create a list of all tokens
         all_tokens = [token for sublist in tokens for token in sublist]
+
+        for i in range(len(all_tokens)):
+            bigram[(all_tokens[i], all_tokens[i + 1])] += 1
+            unigram[(all_tokens[i])] += 1
 
         # Create a frequency distribution of the tokens
         freq_dist = nltk.FreqDist(all_tokens)
