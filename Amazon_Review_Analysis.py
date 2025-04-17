@@ -90,7 +90,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
 
             # Create a list of all tokens
             all_tokens = [token for sublist in tokens for token in sublist]
-            for i in range(len(all_tokens)):
+            for i in range(len(all_tokens) - 1):
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
@@ -101,7 +101,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
             tokens = tokens.apply(lambda x: [word for word in x if word.isalpha()])
 
             all_tokens = [token for sublist in tokens for token in sublist]
-            for i in range(len(all_tokens)):
+            for i in range(len(all_tokens) - 1):
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
@@ -115,7 +115,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
 
             # Create a list of all tokens
             all_tokens = [token for sublist in tokens for token in sublist]
-            for i in range(len(all_tokens)):
+            for i in range(len(all_tokens) - 1):
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
@@ -129,7 +129,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
             # Create a list of all tokens
             all_tokens = [token for sublist in tokens for token in sublist]
 
-            for i in range(len(all_tokens)):
+            for i in range(len(all_tokens) - 1):
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
