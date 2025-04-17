@@ -57,27 +57,34 @@ def sentiment_classification(df_sample):
     df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
     return df_sample
 
-def collocation_extraction_co_occurrence(df_sample):
+def collocation_extraction_co_occurrence(df_sample, sentiment, sentiment_filtered=True, pos_filtered=True):
     """
     Extract collocations and co-occurrences from the reviews.
     """
     nltk.download('punkt')
     nltk.download('stopwords')
 
-    # Tokenize the reviews
-    df_sample['tokens'] = df_sample['review_text'].apply(lambda x: nltk.word_tokenize(x.lower()))
-    df_sample['tokens'] = df_sample['tokens'].apply(lambda x: [word for word in x if word.isalpha()])
+    if sentiment_filtered:
+        # Filtering reviews based on sentiment classification
+        reviews = df_sample[df_sample['sentiment'] == sentiment]['review_text']
+        # Tokenize the reviews
+        tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
+        tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
 
-    # Create a list of all tokens
-    all_tokens = [token for sublist in df_sample['tokens'] for token in sublist]
+    else:
+        reviews = df_sample['review_text']
+        # Tokenize the reviews
+        tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
+        tokens = reviews.apply(lambda x: [word for word in x if word.isalpha()])
 
-    # Create a frequency distribution of the tokens
-    freq_dist = nltk.FreqDist(all_tokens)
+        # Create a list of all tokens
+        all_tokens = [token for sublist in tokens for token in sublist]
 
-    # Plot the frequency distribution
-    plt.figure(figsize=(12, 6))
-    freq_dist.plot(30, cumulative=False)
-    plt.show()
+        # Create a frequency distribution of the tokens
+        freq_dist = nltk.FreqDist(all_tokens)
+        plt.figure(figsize=(12, 6))
+        freq_dist.plot(30, cumulative=False)
+        plt.show()
 
 def main():
     """
