@@ -113,7 +113,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
 
     else:
         # Establishing text to tokenise
-        reviews = df_sample[df_sample]['review_text']
+        reviews = df_sample['review_text']
 
         bigram = Counter()
         unigram = Counter()
@@ -175,7 +175,7 @@ def main():
     print(df.head())
 
     # Sample 10,000 rows for analysis
-    df_sample = df.sample(10000, random_state=42)
+    df_sample = df.sample(1000, random_state=42)
     # Storing the sampled data to a CSV file
     df_sample.to_csv("sampled_reviews.csv", index=False)
 
@@ -183,7 +183,7 @@ def main():
     df_sample = sentiment_classification(df_sample)
     #print(df_sample)
 
-    collocation_extraction_co_occurrence(df_sample, ' ') # take this out before merging
+    collocation_extraction_co_occurrence(df_sample, 'positive', False) # take this out before merging
 
 
 main()
