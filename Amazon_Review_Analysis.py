@@ -124,9 +124,10 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
     
     collocation_data = []
 
-    for bigram in collocations:
-        for (word1, word2) in bigram:
-            collocation_data.append((bigram, word1, word2))
+
+    for (word1, word2) in collocations:
+        bigram = word1 + ' ' + word2
+        collocation_data.append((bigram, word1, word2))
             
 
     collocations_df = pd.DataFrame(collocation_data, columns=['Collocation', 'Word1', 'Word2'])
@@ -151,7 +152,7 @@ def main():
     df_sample = sentiment_classification(df_sample)
     print(df_sample)
 
-    collocation_extraction_pmi(df_sample, 'positive') # take this out before merging
+    collocation_extraction_pmi(df_sample, 'negative', False) # take this out before merging
 
 
 
