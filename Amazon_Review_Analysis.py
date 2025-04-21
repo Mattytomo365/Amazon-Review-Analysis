@@ -84,6 +84,7 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
             finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
             finder.apply_freq_filter(3)  # Filter out bigrams that occur less than 3 times
             collocations = finder.nbest(bigram_measures.pmi, 10)  # Get top 10 collocations based on Pointwise Mutual Information (PMI)
+            print(f'Top 10 collocations (pointwise mutual information)({sentiment} filtered)(pos tag filtered):')
 
         else:
             # Extract collocations using NLTK's BigramCollocationFinder
@@ -91,6 +92,7 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
             finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
+            print(f'Top 10 collocations (pointwise mutual information)({sentiment} filtered)(pos tag unfiltered):')
 
     else:
         # Establishing text to tokenise
@@ -106,11 +108,13 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
             finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
+            print('Top 10 collocations (pointwise mutual information)(sentiment unfiltered)(pos tag filtered):')
         else:
             bigram_measures = nltk.collocations.BigramAssocMeasures()
             finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
+            print('Top 10 collocations (pointwise mutual information)(sentiment unfiltered)(pos tag filtered):')
     
     collocation_data = []
 
@@ -121,7 +125,7 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
 
     collocations_df = pd.DataFrame(collocation_data, columns=['Collocation', 'Word1', 'Word2'])
 
-    return collocations_df
+    print(collocations_df)
 
 def main():
     """
@@ -141,9 +145,8 @@ def main():
     df_sample = sentiment_classification(df_sample)
     print(df_sample)
 
-    collocations = collocation_extraction_pmi(df_sample) # take this out before merging
-    print("Collocations extracted: ")
-    print(collocations)
+    collocation_extraction_pmi(df_sample, 'positive') # take this out before merging
+
 
 
 main()
