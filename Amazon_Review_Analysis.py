@@ -3,7 +3,8 @@ import textblob
 import nltk
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import string
+from nltk.corpus import stopwords
 def load_data(file_path):
     """
     Load the dataset from the CSV file.
@@ -57,18 +58,70 @@ def sentiment_classification(df_sample):
     df_sample['sentiment'] = df_sample['textblob_score'].apply(lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral'))
     return df_sample
 
-def collocation_extraction_pmi(df_sample):
+def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
     """
     Extract collocations from the review text.
     """
-    # Tokenize the review text
-    tokens = nltk.word_tokenize(' '.join(df_sample['review_text']))
-    # Extract collocations using NLTK's BigramCollocationFinder
-    bigram_measures = nltk.collocations.BigramAssocMeasures()
-    finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
-    finder.apply_freq_filter(3)  # Filter out bigrams that occur less than 3 times
-    collocations = finder.nbest(bigram_measures.pmi, 10)  # Get top 10 collocations based on Pointwise Mutual Information (PMI)
-    return collocations
+    if sentiment == ' ':
+        sentiment_filtered = False
+    else:
+        sentiment_filtered = True
+
+    if sentiment_filtered:
+        # Filter the DataFrame based on sentiment
+        reviews = df_sample[df_sample['sentiment'] == sentiment]['review_text']
+
+        # Tokenize the review text
+        tokens = reviews.apply(lambda x: [word for word in nltk.word_tokenize(x.lower()) 
+        if word.isalpha() and word not in string.punctuation and word not in stopwords.words('english')
+        ])
+
+        if pos_filtered:
+            # Filter tokens based on POS tags
+            tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
+            # Extract collocations using NLTK's BigramCollocationFinder
+            bigram_measures = nltk.collocations.BigramAssocMeasures()
+            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder.apply_freq_filter(3)  # Filter out bigrams that occur less than 3 times
+            collocations = finder.nbest(bigram_measures.pmi, 10)  # Get top 10 collocations based on Pointwise Mutual Information (PMI)
+
+        else:
+            # Extract collocations using NLTK's BigramCollocationFinder
+            bigram_measures = nltk.collocations.BigramAssocMeasures()
+            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder.apply_freq_filter(3)
+            collocations = finder.nbest(bigram_measures.pmi, 10)
+
+    else:
+        # Establishing text to tokenise
+        reviews = df_sample['review_text']
+
+        tokens = reviews.apply(lambda x: [word for word in nltk.word_tokenize(x.lower()) 
+        if word.isalpha() and word not in string.punctuation and word not in stopwords.words('english')
+        ])
+
+        if pos_filtered:
+            tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
+            bigram_measures = nltk.collocations.BigramAssocMeasures()
+            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder.apply_freq_filter(3)
+            collocations = finder.nbest(bigram_measures.pmi, 10)
+        else:
+            bigram_measures = nltk.collocations.BigramAssocMeasures()
+            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder.apply_freq_filter(3)
+            collocations = finder.nbest(bigram_measures.pmi, 10)
+    
+    collocation_data = []
+
+    for bigram in collocations:
+        for (word1, word2) in bigram:
+            collocation_data.append((bigram, word1, word2))
+            
+
+    collocations_df = pd.DataFrame(collocation_data, columns=['Collocation', 'Word1', 'Word2'])
+
+    return collocations_df
 
 def main():
     """
@@ -80,7 +133,7 @@ def main():
     print(df.head())
 
     # Sample 10,000 rows for analysis
-    df_sample = df.sample(10000, random_state=42)
+    df_sample = df.sample(1000, random_state=42)
     # Storing the sampled data to a CSV file
     df_sample.to_csv("sampled_reviews.csv", index=False)
 
@@ -88,7 +141,9 @@ def main():
     df_sample = sentiment_classification(df_sample)
     print(df_sample)
 
-    collocation_extraction_pmi(df_sample) # take this out before merging
+    collocations = collocation_extraction_pmi(df_sample) # take this out before merging
+    print("Collocations extracted: ")
+    print(collocations)
 
 
 main()
