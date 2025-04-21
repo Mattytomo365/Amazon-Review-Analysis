@@ -76,12 +76,17 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
         if word.isalpha() and word not in string.punctuation and word not in stopwords.words('english')
         ])
 
+        # Flatten the list of lists into a single list
+        flat_tokens = [word for review in tokens for word in review]
+
         if pos_filtered:
             # Filter tokens based on POS tags
             tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
+            # Assuming tokens is a list of lists, e.g. from df['tokens']
+            flat_tokens = [word for review in tokens for word in review]
             # Extract collocations using NLTK's BigramCollocationFinder
             bigram_measures = nltk.collocations.BigramAssocMeasures()
-            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)  # Filter out bigrams that occur less than 3 times
             collocations = finder.nbest(bigram_measures.pmi, 10)  # Get top 10 collocations based on Pointwise Mutual Information (PMI)
             print(f'Top 10 collocations (pointwise mutual information)({sentiment} filtered)(pos tag filtered):')
@@ -89,7 +94,7 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
         else:
             # Extract collocations using NLTK's BigramCollocationFinder
             bigram_measures = nltk.collocations.BigramAssocMeasures()
-            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
             print(f'Top 10 collocations (pointwise mutual information)({sentiment} filtered)(pos tag unfiltered):')
@@ -104,14 +109,15 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
 
         if pos_filtered:
             tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
+            flat_tokens = [word for review in tokens for word in review]
             bigram_measures = nltk.collocations.BigramAssocMeasures()
-            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
             print('Top 10 collocations (pointwise mutual information)(sentiment unfiltered)(pos tag filtered):')
         else:
             bigram_measures = nltk.collocations.BigramAssocMeasures()
-            finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+            finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
             print('Top 10 collocations (pointwise mutual information)(sentiment unfiltered)(pos tag filtered):')
