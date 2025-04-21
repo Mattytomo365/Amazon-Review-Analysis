@@ -109,7 +109,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
-            print(f'Top 10 collocations (co-occurrences)({sentiment} filtered)(pos tag filtered):')
+            print(f'Top 10 collocations (co-occurrences)({sentiment} filtered)(pos tag unfiltered):')
 
     else:
         # Establishing text to tokenise
