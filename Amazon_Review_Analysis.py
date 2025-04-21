@@ -83,14 +83,13 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
         bigram = Counter()
         unigram = Counter()
 
-        tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
-        # Remove punctuation and stop words
-        tokens = [token for token in tokens if token not in string.punctuation]
-        tokens = [token for token in tokens if token not in stopwords.words('english')]
+        tokens = reviews.apply(lambda x: [word for word in nltk.word_tokenize(x.lower()) 
+                if word.isalpha() and word not in string.punctuation and word not in stopwords.words('english')
+        ])
+
 
         if pos_filtered:
             # Filter tokens based on POS tagging
-
             tokens = tokens.apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN') or pos.startswith('JJ')])
 
             # Create a list of all tokens
@@ -99,7 +98,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
-            print('Top 10 collocations (co-occurrences)(sentiment filtered)(pos tag filtered):')
+            print(f'Top 10 collocations (co-occurrences)({sentiment} filtered)(pos tag filtered):')
 
         else:
             # Tokenize the reviews
@@ -110,9 +109,18 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
-            print('Top 10 collocations (co-occurrences)(sentiment filtered)(pos tag unfiltered):')
+            print(f'Top 10 collocations (co-occurrences)({sentiment} filtered)(pos tag filtered):')
 
     else:
+        # Establishing text to tokenise
+        reviews = df_sample[df_sample]['review_text']
+
+        bigram = Counter()
+        unigram = Counter()
+
+        tokens = reviews.apply(lambda x: [word for word in nltk.word_tokenize(x.lower()) 
+                if word.isalpha() and word not in string.punctuation and word not in stopwords.words('english')
+        ])
 
         if pos_filtered:
             # Filter tokens based on POS tagging
@@ -129,7 +137,7 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
         else:  
             reviews = df_sample['review_text']
             # Tokenize the reviews
-            tokens = tokens.apply(lambda x: [word for word in x if word.isalpha()])
+            # tokens = tokens.apply(lambda x: [word for word in x if word.isalpha()])
 
             # Create a list of all tokens
             all_tokens = [token for sublist in tokens for token in sublist]
@@ -175,7 +183,7 @@ def main():
     df_sample = sentiment_classification(df_sample)
     #print(df_sample)
 
-    collocation_extraction_co_occurrence(df_sample, 'positive') # take this out before merging
+    collocation_extraction_co_occurrence(df_sample, ' ') # take this out before merging
 
 
 main()
