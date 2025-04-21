@@ -4,6 +4,8 @@ import nltk
 import matplotlib.pyplot as plt
 import seaborn as sns
 from collections import Counter
+import string
+from nltk.corpus import stopwords
 
 def load_data(file_path):
     """
@@ -66,8 +68,8 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
     """
     Extract collocations and co-occurrences from the reviews.
     """
-    nltk.download('punkt')
-    nltk.download('stopwords')
+    # nltk.download('punkt')
+    # nltk.download('stopwords')
 
     if sentiment == ' ':
         sentiment_filtered = False
@@ -82,6 +84,9 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
         unigram = Counter()
 
         tokens = reviews.apply(lambda x: nltk.word_tokenize(x.lower()))
+        # Remove punctuation and stop words
+        tokens = [token for token in tokens if token not in string.punctuation]
+        tokens = [token for token in tokens if token not in stopwords.words('english')]
 
         if pos_filtered:
             # Filter tokens based on POS tagging
