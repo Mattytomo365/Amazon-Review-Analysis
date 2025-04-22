@@ -17,5 +17,6 @@ You can track my progress [here](https://www.notion.so/1d518110f1f280a2b2c5c5c68
 - `preprocessing` – Complete
 - `sentiment-analysis` – Complete
 - `performance-optimisation` – Complete
-- `collocation-extraction-pmi` – In progress
-- `collocation-extraction-co-occurrence` – In progress
+- `collocation-extraction-pmi` – Complete
+- `collocation-extraction-co-occurrence` – Complete
+- `sentiment-visualisations` - In-progress
