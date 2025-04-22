@@ -258,6 +258,15 @@ def main():
     textblob_scoring(df_sample)
     df_sample = sentiment_classification(df_sample)
 
+    '''
+    - If you want to filter the collocations based on sentiment, set sentiment to 'positive', 'negative', or 'neutral'.
+    - If you don't want to filter the collocations based on sentiment, set sentiment to ' '.
+    - If you want to filter the collocations based on POS tags, set pos_filtered to True.
+    - If you don't want to filter the collocations based on POS tags, set pos_filtered to False.
+    '''
+    collocation_extraction_co_occurrence(df_sample, 'positive', pos_filtered=True) # Co-occurrence extraction approach
+    collocation_extraction_pmi(df_sample, 'positive', pos_filtered=True) # Pointwise Mutual Information extraction approach
+
 
 
 main()
