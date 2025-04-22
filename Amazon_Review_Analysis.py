@@ -241,6 +241,16 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
 
     print(collocations_df)
 
+def sentiment_totals(df_sample):
+    """
+    Calculate the total number of reviews for each sentiment category.
+    """
+    sentiment_counts = df_sample['sentiment'].value_counts()
+    print('Total number of reviews for each sentiment category:')
+    
+    df_sentiment_totals = pd.DataFrame(sentiment_counts, columns=['Classification', 'Total Reviews']).reset_index()
+    print(df_sentiment_totals)
+
 def main():
     """
     Main function to execute the script.
