@@ -181,9 +181,6 @@ def main():
 
     textblob_scoring(df_sample)
     df_sample = sentiment_classification(df_sample)
-    #print(df_sample)
-
-    collocation_extraction_co_occurrence(df_sample, 'positive', False) # take this out before merging
 
 
 main()
