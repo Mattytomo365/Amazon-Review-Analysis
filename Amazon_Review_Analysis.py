@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import string
 from nltk.corpus import stopwords
+
 def load_data(file_path):
     """
     Load the dataset from the CSV file.
