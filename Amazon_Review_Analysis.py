@@ -245,10 +245,16 @@ def sentiment_totals(df_sample):
     """
     Calculate the total number of reviews for each sentiment category.
     """
-    sentiment_counts = df_sample['sentiment'].value_counts()
+    totals = []
+    classifications = ['positive', 'negative', 'neutral']
+
+    for classification in classifications:
+        total = df_sample[df_sample['sentiment'] == classification].shape[0]
+        totals.append(total)
+
     print('Total number of reviews for each sentiment category:')
     
-    df_sentiment_totals = pd.DataFrame(sentiment_counts, columns=['Classification', 'Total Reviews']).reset_index()
+    df_sentiment_totals = pd.DataFrame({'Classification' : classifications, 'Total Reviews': totals})
     print(df_sentiment_totals)
 
 def main():
@@ -267,6 +273,9 @@ def main():
 
     textblob_scoring(df_sample)
     df_sample = sentiment_classification(df_sample)
+    print('Sentiment classification complete.')
+
+    sentiment_totals(df_sample)
 
 
 
