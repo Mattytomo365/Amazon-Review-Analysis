@@ -268,10 +268,18 @@ def sentiment_distribution(df_sample):
     """
     Plot the distribution of sentiment scores.
     """
+    # Boxplots for sentiment score distributions across classifications
     sns.boxplot(x='sentiment', y='textblob_score', data=df_sample)
-    plt.title('Distribution of Sentiment Scores')
+    plt.title('Distribution of Sentiment Scores (Classification Specific)')
     plt.xlabel('Classification')
     plt.ylabel('Sentiment Score')
+    plt.show()
+
+    # Histogram for overall sentiment score distribution
+    plt.hist(df_sample['textblob_score'], color='blue', alpha=0.7)
+    plt.title('Distribution of Sentiment Scores (Overall)')
+    plt.xlabel('Sentiment Score')
+    plt.ylabel('Frequency')
     plt.show()
 
 def main():
