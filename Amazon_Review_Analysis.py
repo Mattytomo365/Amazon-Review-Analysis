@@ -269,7 +269,6 @@ def sentiment_distribution(df_sample):
     Plot the distribution of sentiment scores.
     """
     sns.boxplot(x='sentiment', y='textblob_score', data=df_sample)
-    plt.figure(figsize=(10, 6))
     plt.title('Distribution of Sentiment Scores')
     plt.xlabel('Classification')
     plt.ylabel('Sentiment Score')
