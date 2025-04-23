@@ -283,8 +283,8 @@ def main():
     print('Processing complete.')
     print(df.head())
 
-    # Sample 10,000 rows for analysis
-    df_sample = df.sample(10000, random_state=42)
+    df_sample = df.sample(100, random_state=42) # Change the sample size as needed, the smaller the smaple the faster the code will run.
+
     # Storing the sampled data to a CSV file
     df_sample.to_csv("sampled_reviews.csv", index=False)
 
