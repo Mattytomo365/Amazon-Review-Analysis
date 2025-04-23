@@ -257,6 +257,12 @@ def sentiment_totals(df_sample):
     df_sentiment_totals = pd.DataFrame({'Classification' : classifications, 'Total Reviews': totals})
     print(df_sentiment_totals)
 
+    # Plotting the sentiment totals
+    plt.figure(figsize=(10, 6))
+    plt.pie(df_sentiment_totals['Total Reviews'], labels=df_sentiment_totals['Classification'], autopct='%1.1f%%', startangle=140)
+    plt.title('Review Classification Totals')
+    plt.show()
+
 def main():
     """
     Main function to execute the script.
