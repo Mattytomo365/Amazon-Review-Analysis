@@ -261,6 +261,7 @@ def sentiment_totals(df_sample):
     plt.figure(figsize=(10, 6))
     plt.pie(df_sentiment_totals['Total Reviews'], labels=df_sentiment_totals['Classification'], autopct='%1.1f%%', startangle=140)
     plt.title('Review Classification Totals')
+    plt.legend(title='Classifications')
     plt.show()
 
 def main():
