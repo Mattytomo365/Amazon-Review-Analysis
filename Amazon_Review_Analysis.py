@@ -264,6 +264,16 @@ def sentiment_totals(df_sample):
     plt.legend(title='Classifications')
     plt.show()
 
+def sentiment_distribution(df_sample):
+    """
+    Plot the distribution of sentiment scores.
+    """
+    plt.boxplot(df_sample['textblob_score'], vert=False)
+    plt.title('Distribution of Sentiment Scores')
+    plt.xlabel('Classification')
+    plt.ylabel('Sentiment Score')
+    plt.show()
+
 def main():
     """
     Main function to execute the script.
