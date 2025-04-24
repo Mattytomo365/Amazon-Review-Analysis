@@ -294,10 +294,40 @@ def top_reviews(df_sample):
     print(f'Top 10 negative reviews:')
     print(top_negative_reviews[['review_text', 'textblob_score']])
 
+    # Internal function used to neatly wrap long review text for display in tables
+    def wrap_text(text, width=40):
+        return '\n'.join(textwrap.wrap(text, width))
+    
+    # Apply text wrapping to review content
+    top_positive_reviews['review_content'] = top_positive_reviews['review_content'].apply(lambda x: wrap_text(str(x)))
+    top_negative_reviews['review_content'] = top_negative_reviews['review_content'].apply(lambda x: wrap_text(str(x)))
+
+    fig, ax = plt.subplots(figsize = (8, 5))
+    ax.axis('off')
+    ax.set_title('Top 5 Most Positive Reviews', fontsize=14, fontweight="bold")
+    table = ax.table(cellText=top_positive_reviews.values, colLabels=['Review Content', 'Sentiment Score'], loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(8)
+    table.scale(1, 3)  # Scale table to fit better
+    
+    plt.show()
+    
+    fig, ax = plt.subplots(figsize = (9, 5))
+    ax.axis('off')
+    ax.set_title('Top 5 Most Negative Reviews', fontsize=14, fontweight="bold")
+    table = ax.table(cellText=top_negative_reviews.values, colLabels=['Review Content', 'Sentiment Score'], loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(8)
+    table.scale(1, 3)  # Scale table to fit better
+    
+    plt.show()
+
+
 def main():
     """
     Main function to execute the script.
     """
+    pd.set_option('display.max_columns', None)
     df = load_data("Reviews.csv")
     df = preprocess_data(df)
     print('Processing complete.')
