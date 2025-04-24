@@ -276,11 +276,23 @@ def sentiment_distribution(df_sample):
     plt.show()
 
     # Histogram for overall sentiment score distribution
-    plt.hist(df_sample['textblob_score'], color='blue', alpha=0.7)
+    plt.hist(df_sample['textblob_score'], bins=30, alpha=0.7)
     plt.title('Distribution of Sentiment Scores (Overall)')
     plt.xlabel('Sentiment Score')
     plt.ylabel('Frequency')
     plt.show()
+
+def top_reviews(df_sample):
+    """
+    Display the top reviews for each sentiment category.
+    """
+    top_positive_reviews = df_sample[df_sample['sentiment'] == 'positive'].nlargest(10, 'textblob_score')
+    print(f'Top 10 positive reviews:')
+    print(top_positive_reviews[['review_text', 'textblob_score']])
+
+    top_negative_reviews = df_sample[df_sample['sentiment'] == 'negative'].nsmallest(10, 'textblob_score')
+    print(f'Top 10 negative reviews:')
+    print(top_negative_reviews[['review_text', 'textblob_score']])
 
 def main():
     """
@@ -300,8 +312,9 @@ def main():
     df_sample = sentiment_classification(df_sample)
     print('Sentiment classification complete.')
 
-    sentiment_totals(df_sample)
-    sentiment_distribution(df_sample)
+    #sentiment_totals(df_sample)
+    #sentiment_distribution(df_sample)
+    top_reviews(df_sample)
 
 
 
