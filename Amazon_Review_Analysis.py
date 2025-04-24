@@ -163,18 +163,17 @@ def co_occurrence_table(df_sample, sentiment, pos_filtered=True):
 
     if sentiment_filtered:
         if pos_filtered:
-            title = f"Top 40 Collocations in {sentiment} Reviews (Co-Occurrence Approach)(POS Tag Filtered)"
+            title = f"Top 10 Collocations in {sentiment} Reviews (Co-Occurrence Approach)(POS Tag Filtered)"
         else:
-            title = f"Top 40 Collocations in {sentiment} Reviews (Co-Occurrence Approach)(POS Tag Unfiltered)"
+            title = f"Top 10 Collocations in {sentiment} Reviews (Co-Occurrence Approach)(POS Tag Unfiltered)"
     else:
-        title = "Top 40 Collocations in All Reviews (Co-Occurrence Approach)"
+        title = "Top 10 Collocations in All Reviews (Co-Occurrence Approach)"
 
-    fig, ax = plt.subplots(figsize = (10, 8)) # Increasing figure size
+    fig, ax = plt.subplots(figsize = (10, 6))
     ax.axis('off')
     ax.set_title(title, fontsize=14, fontweight="bold")
     
-    table = ax.table(cellText=df_sample.values, colLabels=['First Word', 'Second Word', 'Co-Occurrence', 'Word 1 Freq', 'Word 2 Freq'], loc='center', bbox=[0, -0.2, 1, 1.1])  # Shift table down
-
+    table = ax.table(cellText=df_sample.values, colLabels=['First Word', 'Second Word', 'Co-Occurrence', 'Word 1 Freq', 'Word 2 Freq'], loc='center')
     table.auto_set_font_size(False)
     table.set_fontsize(10)
     
@@ -268,17 +267,17 @@ def pmi_table(df_sample, sentiment, pos_filtered=True):
 
     if sentiment_filtered:
         if pos_filtered:
-            title = f"Top 40 Collocations in {sentiment} Reviews (PMI Approach)(POS Tag Filtered)"
+            title = f"Top 10 Collocations in {sentiment} Reviews (PMI Approach)(POS Tag Filtered)"
         else:
-            title = f"Top 40 Collocations in {sentiment} Reviews (PMI Approach)(POS Tag Unfiltered)"
+            title = f"Top 10 Collocations in {sentiment} Reviews (PMI Approach)(POS Tag Unfiltered)"
     else:
-        title = "Top 40 Collocations in All Reviews (PMI Approach)"
+        title = "Top 10 Collocations in All Reviews (PMI Approach)"
 
-    fig, ax = plt.subplots(figsize = (10, 8)) # Increasing figure size
+    fig, ax = plt.subplots(figsize = (10, 6))
     ax.axis('off')
     ax.set_title(title, fontsize=14, fontweight="bold")
     
-    table = ax.table(cellText=df_sample.values, colLabels=['Collocation', 'Word 1', 'Word 2'], loc='center', bbox=[0, -0.2, 1, 1.1])  # Shift table down
+    table = ax.table(cellText=df_sample.values, colLabels=['Collocation', 'Word 1', 'Word 2'], loc='center')
 
     table.auto_set_font_size(False)
     table.set_fontsize(10)
