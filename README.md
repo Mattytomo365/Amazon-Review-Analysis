@@ -19,4 +19,4 @@ You can track my progress [here](https://www.notion.so/1d518110f1f280a2b2c5c5c68
 - `performance-optimisation` – Complete
 - `collocation-extraction-pmi` – Complete
 - `collocation-extraction-co-occurrence` – Complete
-- `sentiment-visualisations` - In-progress
+- `sentiment-visualisations` - Complete
