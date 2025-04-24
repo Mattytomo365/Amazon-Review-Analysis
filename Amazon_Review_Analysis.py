@@ -396,8 +396,8 @@ def main():
     collocation_extraction_co_occurrence(df_sample, 'positive', pos_filtered=True) # Co-occurrence extraction approach
     collocation_extraction_pmi(df_sample, 'positive', pos_filtered=True) # Pointwise Mutual Information extraction approach
 
-    #sentiment_totals(df_sample)
-    #sentiment_distribution(df_sample)
-    #top_reviews(df_sample)
+    sentiment_totals(df_sample)
+    sentiment_distribution(df_sample)
+    top_reviews(df_sample)
 
 main()
