@@ -69,9 +69,6 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
     """
     Extract collocations and co-occurrences from the reviews.
     """
-    # nltk.download('punkt')
-    # nltk.download('stopwords')
-
     if sentiment == ' ':
         sentiment_filtered = False
     else:
@@ -99,8 +96,6 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
 
-            print(f'Top 10 collocations (co-occurrences)({sentiment} filtered)(pos tag filtered):')
-
         else:
             # Tokenize the reviews
             tokens = tokens.apply(lambda x: [word for word in x if word.isalpha()])
@@ -109,8 +104,6 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
             for i in range(len(all_tokens) - 1):
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
-
-            print(f'Top 10 collocations (co-occurrences)({sentiment} filtered)(pos tag unfiltered):')
 
     else:
         # Establishing text to tokenise
@@ -132,13 +125,9 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
             for i in range(len(all_tokens) - 1):
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
-
-            print('Top 10 collocations (co-occurrences)(sentiment unfiltered)(pos tag filtered):')
         
         else:  
             reviews = df_sample['review_text']
-            # Tokenize the reviews
-            # tokens = tokens.apply(lambda x: [word for word in x if word.isalpha()])
 
             # Create a list of all tokens
             all_tokens = [token for sublist in tokens for token in sublist]
@@ -146,14 +135,6 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
             for i in range(len(all_tokens) - 1):
                 bigram[(all_tokens[i], all_tokens[i + 1])] += 1
                 unigram[(all_tokens[i])] += 1
-
-        print('Top 10 collocations (co-occurrences)(sentiment unfiltered)(pos tag unfiltered):')
-
-        # # Create a frequency distribution of the tokens
-        # freq_dist = nltk.FreqDist(all_tokens)
-        # plt.figure(figsize=(12, 6))
-        # freq_dist.plot(30, cumulative=False)
-        # plt.show()
 
     collocation_data = []
 
@@ -228,7 +209,6 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
             finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)  # Filter out bigrams that occur less than 3 times
             collocations = finder.nbest(bigram_measures.pmi, 10)  # Get top 10 collocations based on Pointwise Mutual Information (PMI)
-            print(f'Top 10 collocations (pointwise mutual information)({sentiment} filtered)(pos tag filtered):')
 
         else:
             # Extract collocations using NLTK's BigramCollocationFinder
@@ -236,7 +216,6 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
             finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
-            print(f'Top 10 collocations (pointwise mutual information)({sentiment} filtered)(pos tag unfiltered):')
 
     else:
         # Establishing text to tokenise
@@ -253,13 +232,12 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
             finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
-            print('Top 10 collocations (pointwise mutual information)(sentiment unfiltered)(pos tag filtered):')
+
         else:
             bigram_measures = nltk.collocations.BigramAssocMeasures()
             finder = nltk.collocations.BigramCollocationFinder.from_words(flat_tokens)
             finder.apply_freq_filter(3)
             collocations = finder.nbest(bigram_measures.pmi, 10)
-            print('Top 10 collocations (pointwise mutual information)(sentiment unfiltered)(pos tag filtered):')
     
     collocation_data = []
 
@@ -271,7 +249,6 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
 
     collocations_df = pd.DataFrame(collocation_data, columns=['Collocation', 'Word1', 'Word2'])
 
-    print(collocations_df)
 
 def pmi_table(df_sample, sentiment, pos_filtered=True):
     """
@@ -304,6 +281,7 @@ def pmi_table(df_sample, sentiment, pos_filtered=True):
     plt.subplots_adjust(top=0.95)
     plt.show()
 
+
 def sentiment_totals(df_sample):
     """
     Calculate the total number of reviews for each sentiment category.
@@ -327,6 +305,7 @@ def sentiment_totals(df_sample):
     plt.legend(title='Classifications')
     plt.show()
 
+
 def sentiment_distribution(df_sample):
     """
     Plot the distribution of sentiment scores.
@@ -344,6 +323,7 @@ def sentiment_distribution(df_sample):
     plt.xlabel('Sentiment Score')
     plt.ylabel('Frequency')
     plt.show()
+
 
 def top_reviews(df_sample):
     """
