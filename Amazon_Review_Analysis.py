@@ -164,7 +164,38 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
 
     collocations_df = pd.DataFrame(collocation_data, columns=['Word1', 'Word2', 'Co-occurrence', 'Word1_Count', 'Word2_Count'])
     collocations_df = collocations_df.sort_values(by='Co-occurrence', ascending=False).head(10)
-    print(collocations_df)
+
+
+def co_occurrence_table(df_sample, sentiment, pos_filtered=True):
+    """
+    Displaying collocations in a table format (Co-Occurrence Approach).
+    """
+    if sentiment == ' ':
+        sentiment_filtered = False
+    else:
+        sentiment_filtered = True
+
+    if sentiment_filtered:
+        if pos_filtered:
+            sentiment_title = ", ".join(sentiment)  # Convert list to string
+            title = f"Top 40 Collocations in {sentiment_title} Reviews (Co-Occurrence Approach)(POS Tag Filtered)"
+        else:
+            sentiment_title = ", ".join(sentiment)
+            title = f"Top 40 Collocations in {sentiment_title} Reviews (Co-Occurrence Approach)(POS Tag Unfiltered)"
+    else:
+        title = "Top 40 Collocations in All Reviews (Co-Occurrence Approach)"
+
+    fig, ax = plt.subplots(figsize = (10, 8)) # Increasing figure size
+    ax.axis('off')
+    ax.set_title(title, fontsize=14, fontweight="bold")
+    
+    table = ax.table(cellText=df_sample.values, colLabels=['First Word', 'Second Word', 'Co-Occurrence', 'Word 1 Freq', 'Word 2 Freq'], loc='center', bbox=[0, -0.2, 1, 1.1])  # Shift table down
+
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    
+    plt.subplots_adjust(top=0.95)
+    plt.show()
 
 def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
     """
@@ -241,6 +272,37 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
     collocations_df = pd.DataFrame(collocation_data, columns=['Collocation', 'Word1', 'Word2'])
 
     print(collocations_df)
+
+def pmi_table(df_sample, sentiment, pos_filtered=True):
+    """
+    Displaying collocations in a table format (PMI Approach).
+    """
+    if sentiment == ' ':
+        sentiment_filtered = False
+    else:
+        sentiment_filtered = True
+
+    if sentiment_filtered:
+        if pos_filtered:
+            sentiment_title = ", ".join(sentiment)  # Convert list to string
+            title = f"Top 40 Collocations in {sentiment_title} Reviews (PMI Approach)(POS Tag Filtered)"
+        else:
+            sentiment_title = ", ".join(sentiment)
+            title = f"Top 40 Collocations in {sentiment_title} Reviews (PMI Approach)(POS Tag Unfiltered)"
+    else:
+        title = "Top 40 Collocations in All Reviews (PMI Approach)"
+
+    fig, ax = plt.subplots(figsize = (10, 8)) # Increasing figure size
+    ax.axis('off')
+    ax.set_title(title, fontsize=14, fontweight="bold")
+    
+    table = ax.table(cellText=df_sample.values, colLabels=['Collocation', 'Word 1', 'Word 2'], loc='center', bbox=[0, -0.2, 1, 1.1])  # Shift table down
+
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    
+    plt.subplots_adjust(top=0.95)
+    plt.show()
 
 def sentiment_totals(df_sample):
     """
