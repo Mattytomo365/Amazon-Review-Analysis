@@ -6,6 +6,7 @@ import seaborn as sns
 from collections import Counter
 import string
 from nltk.corpus import stopwords
+import textwrap
 
 def load_data(file_path):
     """
@@ -286,28 +287,26 @@ def top_reviews(df_sample):
     """
     Display the top reviews for each sentiment category.
     """
-    top_positive_reviews = df_sample[df_sample['sentiment'] == 'positive'].nlargest(10, 'textblob_score')
-    print(f'Top 10 positive reviews:')
-    print(top_positive_reviews[['review_text', 'textblob_score']])
+    positives = df_sample[df_sample['sentiment'] == 'positive']
+    negatives = df_sample[df_sample['sentiment'] == 'negative']
 
-    top_negative_reviews = df_sample[df_sample['sentiment'] == 'negative'].nsmallest(10, 'textblob_score')
-    print(f'Top 10 negative reviews:')
-    print(top_negative_reviews[['review_text', 'textblob_score']])
+    top_positive_reviews = positives.nlargest(5, 'textblob_score')[['review_text', 'textblob_score']]
+    top_negative_reviews = negatives.nsmallest(5, 'textblob_score')[['review_text', 'textblob_score']]
 
     # Internal function used to neatly wrap long review text for display in tables
-    def wrap_text(text, width=40):
+    def wrap_text(text, width=80):
         return '\n'.join(textwrap.wrap(text, width))
     
     # Apply text wrapping to review content
-    top_positive_reviews['review_content'] = top_positive_reviews['review_content'].apply(lambda x: wrap_text(str(x)))
-    top_negative_reviews['review_content'] = top_negative_reviews['review_content'].apply(lambda x: wrap_text(str(x)))
+    top_positive_reviews['review_text'] = top_positive_reviews['review_text'].apply(lambda x: wrap_text(str(x)))
+    top_negative_reviews['review_text'] = top_negative_reviews['review_text'].apply(lambda x: wrap_text(str(x)))
 
     fig, ax = plt.subplots(figsize = (8, 5))
     ax.axis('off')
     ax.set_title('Top 5 Most Positive Reviews', fontsize=14, fontweight="bold")
     table = ax.table(cellText=top_positive_reviews.values, colLabels=['Review Content', 'Sentiment Score'], loc='center', cellLoc='center')
     table.auto_set_font_size(False)
-    table.set_fontsize(8)
+    table.set_fontsize(6)
     table.scale(1, 3)  # Scale table to fit better
     
     plt.show()
@@ -317,7 +316,7 @@ def top_reviews(df_sample):
     ax.set_title('Top 5 Most Negative Reviews', fontsize=14, fontweight="bold")
     table = ax.table(cellText=top_negative_reviews.values, colLabels=['Review Content', 'Sentiment Score'], loc='center', cellLoc='center')
     table.auto_set_font_size(False)
-    table.set_fontsize(8)
+    table.set_fontsize(5)
     table.scale(1, 3)  # Scale table to fit better
     
     plt.show()
