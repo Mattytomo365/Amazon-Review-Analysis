@@ -6,6 +6,7 @@ import seaborn as sns
 from collections import Counter
 import string
 from nltk.corpus import stopwords
+import textwrap
 
 def load_data(file_path):
     """
@@ -241,22 +242,104 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
 
     print(collocations_df)
 
+def sentiment_totals(df_sample):
+    """
+    Calculate the total number of reviews for each sentiment category.
+    """
+    totals = []
+    classifications = ['positive', 'negative', 'neutral']
+
+    for classification in classifications:
+        total = df_sample[df_sample['sentiment'] == classification].shape[0]
+        totals.append(total)
+
+    print('Total number of reviews for each sentiment category:')
+    
+    df_sentiment_totals = pd.DataFrame({'Classification' : classifications, 'Total Reviews': totals})
+    print(df_sentiment_totals)
+
+    # Plotting the sentiment totals
+    plt.figure(figsize=(10, 6))
+    plt.pie(df_sentiment_totals['Total Reviews'], labels=df_sentiment_totals['Classification'], autopct='%1.1f%%', startangle=140)
+    plt.title('Review Classification Totals')
+    plt.legend(title='Classifications')
+    plt.show()
+
+def sentiment_distribution(df_sample):
+    """
+    Plot the distribution of sentiment scores.
+    """
+    # Boxplots for sentiment score distributions across classifications
+    sns.boxplot(x='sentiment', y='textblob_score', data=df_sample)
+    plt.title('Distribution of Sentiment Scores (Classification Specific)')
+    plt.xlabel('Classification')
+    plt.ylabel('Sentiment Score')
+    plt.show()
+
+    # Histogram for overall sentiment score distribution
+    plt.hist(df_sample['textblob_score'], bins=30, alpha=0.7)
+    plt.title('Distribution of Sentiment Scores (Overall)')
+    plt.xlabel('Sentiment Score')
+    plt.ylabel('Frequency')
+    plt.show()
+
+def top_reviews(df_sample):
+    """
+    Display the top reviews for each sentiment category.
+    """
+    positives = df_sample[df_sample['sentiment'] == 'positive']
+    negatives = df_sample[df_sample['sentiment'] == 'negative']
+
+    top_positive_reviews = positives.nlargest(5, 'textblob_score')[['review_text', 'textblob_score']]
+    top_negative_reviews = negatives.nsmallest(5, 'textblob_score')[['review_text', 'textblob_score']]
+
+    # Internal function used to neatly wrap long review text for display in tables
+    def wrap_text(text, width=80):
+        return '\n'.join(textwrap.wrap(text, width))
+    
+    # Apply text wrapping to review content
+    top_positive_reviews['review_text'] = top_positive_reviews['review_text'].apply(lambda x: wrap_text(str(x)))
+    top_negative_reviews['review_text'] = top_negative_reviews['review_text'].apply(lambda x: wrap_text(str(x)))
+
+    fig, ax = plt.subplots(figsize = (8, 5))
+    ax.axis('off')
+    ax.set_title('Top 5 Most Positive Reviews', fontsize=14, fontweight="bold")
+    table = ax.table(cellText=top_positive_reviews.values, colLabels=['Review Content', 'Sentiment Score'], loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(6)
+    table.scale(1, 3)  # Scale table to fit better
+    
+    plt.show()
+    
+    fig, ax = plt.subplots(figsize = (9, 5))
+    ax.axis('off')
+    ax.set_title('Top 5 Most Negative Reviews', fontsize=14, fontweight="bold")
+    table = ax.table(cellText=top_negative_reviews.values, colLabels=['Review Content', 'Sentiment Score'], loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(5)
+    table.scale(1, 3)  # Scale table to fit better
+    
+    plt.show()
+
+
 def main():
     """
     Main function to execute the script.
     """
+    pd.set_option('display.max_columns', None)
     df = load_data("Reviews.csv")
     df = preprocess_data(df)
     print('Processing complete.')
     print(df.head())
 
-    # Sample 10,000 rows for analysis
-    df_sample = df.sample(10000, random_state=42)
+    df_sample = df.sample(100, random_state=42) # Change the sample size as needed, the smaller the smaple the faster the code will run.
+
     # Storing the sampled data to a CSV file
     df_sample.to_csv("sampled_reviews.csv", index=False)
 
     textblob_scoring(df_sample)
     df_sample = sentiment_classification(df_sample)
+    print('Sentiment classification complete.')
 
     '''
     - If you want to filter the collocations based on sentiment, set sentiment to 'positive', 'negative', or 'neutral'.
@@ -267,6 +350,8 @@ def main():
     collocation_extraction_co_occurrence(df_sample, 'positive', pos_filtered=True) # Co-occurrence extraction approach
     collocation_extraction_pmi(df_sample, 'positive', pos_filtered=True) # Pointwise Mutual Information extraction approach
 
-
+    sentiment_totals(df_sample)
+    sentiment_distribution(df_sample)
+    top_reviews(df_sample)
 
 main()
