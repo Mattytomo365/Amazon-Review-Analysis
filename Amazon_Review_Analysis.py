@@ -146,6 +146,11 @@ def collocation_extraction_co_occurrence(df_sample, sentiment, pos_filtered=True
     collocations_df = pd.DataFrame(collocation_data, columns=['Word1', 'Word2', 'Co-occurrence', 'Word1_Count', 'Word2_Count'])
     collocations_df = collocations_df.sort_values(by='Co-occurrence', ascending=False).head(10)
 
+    if pos_filtered:
+        co_occurrence_table(collocations_df, sentiment)
+    else:
+        co_occurrence_table(collocations_df, sentiment, False)
+
 
 def co_occurrence_table(df_sample, sentiment, pos_filtered=True):
     """
@@ -158,11 +163,9 @@ def co_occurrence_table(df_sample, sentiment, pos_filtered=True):
 
     if sentiment_filtered:
         if pos_filtered:
-            sentiment_title = ", ".join(sentiment)  # Convert list to string
-            title = f"Top 40 Collocations in {sentiment_title} Reviews (Co-Occurrence Approach)(POS Tag Filtered)"
+            title = f"Top 40 Collocations in {sentiment} Reviews (Co-Occurrence Approach)(POS Tag Filtered)"
         else:
-            sentiment_title = ", ".join(sentiment)
-            title = f"Top 40 Collocations in {sentiment_title} Reviews (Co-Occurrence Approach)(POS Tag Unfiltered)"
+            title = f"Top 40 Collocations in {sentiment} Reviews (Co-Occurrence Approach)(POS Tag Unfiltered)"
     else:
         title = "Top 40 Collocations in All Reviews (Co-Occurrence Approach)"
 
@@ -246,8 +249,12 @@ def collocation_extraction_pmi(df_sample, sentiment, pos_filtered = False):
         bigram = word1 + ' ' + word2
         collocation_data.append((bigram, word1, word2))
             
-
     collocations_df = pd.DataFrame(collocation_data, columns=['Collocation', 'Word1', 'Word2'])
+
+    if pos_filtered:
+        pmi_table(collocations_df, sentiment)
+    else:
+        pmi_table(collocations_df, sentiment, False)
 
 
 def pmi_table(df_sample, sentiment, pos_filtered=True):
@@ -261,11 +268,9 @@ def pmi_table(df_sample, sentiment, pos_filtered=True):
 
     if sentiment_filtered:
         if pos_filtered:
-            sentiment_title = ", ".join(sentiment)  # Convert list to string
-            title = f"Top 40 Collocations in {sentiment_title} Reviews (PMI Approach)(POS Tag Filtered)"
+            title = f"Top 40 Collocations in {sentiment} Reviews (PMI Approach)(POS Tag Filtered)"
         else:
-            sentiment_title = ", ".join(sentiment)
-            title = f"Top 40 Collocations in {sentiment_title} Reviews (PMI Approach)(POS Tag Unfiltered)"
+            title = f"Top 40 Collocations in {sentiment} Reviews (PMI Approach)(POS Tag Unfiltered)"
     else:
         title = "Top 40 Collocations in All Reviews (PMI Approach)"
 
@@ -392,8 +397,8 @@ def main():
     collocation_extraction_co_occurrence(df_sample, 'positive', pos_filtered=True) # Co-occurrence extraction approach
     collocation_extraction_pmi(df_sample, 'positive', pos_filtered=True) # Pointwise Mutual Information extraction approach
 
-    sentiment_totals(df_sample)
-    sentiment_distribution(df_sample)
-    top_reviews(df_sample)
+    #sentiment_totals(df_sample)
+    #sentiment_distribution(df_sample)
+    #top_reviews(df_sample)
 
 main()
