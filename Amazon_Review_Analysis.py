@@ -341,10 +341,8 @@ def main():
     df_sample = sentiment_classification(df_sample)
     print('Sentiment classification complete.')
 
-    #sentiment_totals(df_sample)
-    #sentiment_distribution(df_sample)
+    sentiment_totals(df_sample)
+    sentiment_distribution(df_sample)
     top_reviews(df_sample)
-
-
 
 main()
