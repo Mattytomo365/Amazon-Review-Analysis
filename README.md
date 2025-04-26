@@ -29,13 +29,13 @@ You can track the project's progress [here](https://www.notion.so/1d518110f1f280
 - `README.md`: Documentation for the project.
 
 ### Branches Overview
-- `preprocessing` (merged) - Reformatting and cleaning the dataset in preparation for analysis.
-- `sentiment-analysis` (merged) - Implementing TextBlob scoring and sentiment labelling.
-- `performance-optimisation` (merged) – Introducing dataset sampling to improve compile time.
-- `collocation-extraction-pmi` (merged) – Extracting collocations using the Pointwise Mutual Information (PMI) approach.
-- `collocation-extraction-co-occurrence` (merged) – Extracting collocations using the Co-Occurrence approach.
-- `sentiment-visualisations` (merged) - Adding visualisations to display sentiment patters.
-- `visualisation-improvements` (merged) - Improving the visualisation of collocation extraction results.
+- `preprocessing` (merged): Reformatting and cleaning the dataset in preparation for analysis.
+- `sentiment-analysis` (merged): Implementing TextBlob scoring and sentiment labelling.
+- `performance-optimisation` (merged): Introducing dataset sampling to improve compile time.
+- `collocation-extraction-pmi` (merged): Extracting collocations using the Pointwise Mutual Information (PMI) approach.
+- `collocation-extraction-co-occurrence` (merged): Extracting collocations using the Co-Occurrence approach.
+- `sentiment-visualisations` (merged): Adding visualisations to display sentiment patters.
+- `visualisation-improvements` (merged): Improving the visualisation of collocation extraction results.
 
 ---
 
